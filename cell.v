@@ -16,6 +16,7 @@ module cell(
   input clk;
   input rst_n;
   input [3:0] cmd;
+  //DO we need a cmd valid?
   input [3:0] data_in;
   output [3:0] data_out;
   input data_in_rdy;
@@ -34,15 +35,20 @@ module cell(
   always@(posedge clk or negedge rst_n)
   begin
     if rst_n == 1'b0
-      value = 4'b0;
+      value <= 4'b0000;
     else
     begin
       if cmd == 4'b0 && data_in_rdy
-        value = data_in;
+        value <= data_in;
     end
   end
   
-//Block to read   
+//Block to read the cell value
+  always@(posedge clk)
+  begin
+    if cmd == 4'b0001
+      data_out <= value;
+  end
   
   
 endmodule
